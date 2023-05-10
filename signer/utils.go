@@ -36,7 +36,7 @@ func HMAC(key []byte, text string) []byte {
 
 // Build from headers map the string with headers line by line
 func CreateHeadersString(headers map[string]string) string {
-	var headersString string = ""
+	var headersString = ""
 	for k := range headers {
 		headersString = headersString + k + ":" + headers[k] + "\n"
 	}

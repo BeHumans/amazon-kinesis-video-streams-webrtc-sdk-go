@@ -13,38 +13,36 @@ import (
 
 // var for test porpouse
 var (
-	CHANNEL_ARN = "arn:aws:kinesisvideo:us-west-2:123456789012:channel/testChannel/1234567890"
-	CLIENT_ID   = "TestClientId"
-	REGION      = "us-west-2"
-	ENDPOINT    = "wss://endpoint.kinesisvideo.amazonaws.com"
+	channelARN = "arn:aws:kinesisvideo:us-west-2:123456789012:channel/testChannel/1234567890"
+	clientID   = "TestClientId"
+	REGION     = "us-west-2"
+	ENDPOINT   = "wss://endpoint.kinesisvideo.amazonaws.com"
 
-	SDP_OFFER = `{"sdp":"offer= true\nvideo= true","type":"offer"}`
+	SDPOffer = `{"sdp":"offer= true\nvideo= true","type":"offer"}`
 
-	SDP_OFFER_VIEWER_STRING  = `{"action":"SDP_OFFER","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoib2ZmZXIifQ=="}`
-	SDP_OFFER_VIEWER_MESSAGE = `{"messageType":"SDP_OFFER","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoib2ZmZXIifQ==","senderClientId":"TestClientId"}`
-	SDP_OFFER_MASTER_STRING  = `{"action":"SDP_OFFER","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoib2ZmZXIifQ==","recipientClientId":"TestClientId"}`
-	SDP_OFFER_MASTER_MESSAGE = `{"messageType":"SDP_OFFER","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoib2ZmZXIifQ=="}`
+	sdpOfferViewer        = `{"action":"SDPOffer","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoib2ZmZXIifQ=="}`
+	sdpOfferViewerMessage = `{"messageType":"SDPOffer","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoib2ZmZXIifQ==","senderClientID":"TestClientId"}`
+	sdpOfferMaster        = `{"action":"SDPOffer","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoib2ZmZXIifQ==","recipientClientID":"TestClientId"}`
+	sdpOfferMasterMessage = `{"messageType":"SDPOffer","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoib2ZmZXIifQ=="}`
 
-	SDP_ANSWER = `{"sdp":"offer= true\nvideo= true","type":"answer"}`
+	SDPAnswer = `{"sdp":"offer= true\nvideo= true","type":"answer"}`
 
-	SDP_ANSWER_VIEWER_MESSAGE = `{"messageType":"SDP_ANSWER","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoiYW5zd2VyIn0=","senderClientId":"TestClientId"}'`
-	SDP_ANSWER_VIEWER_STRING  = `{"action":"SDP_ANSWER","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoiYW5zd2VyIn0="}`
-	SDP_ANSWER_MASTER_MESSAGE = `{"messageType":"SDP_ANSWER","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoiYW5zd2VyIn0="}'`
-	SDP_ANSWER_MASTER_STRING  = `{"action":"SDP_ANSWER","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoiYW5zd2VyIn0=","recipientClientId":"TestClientId"}`
+	sdpAnswerViewerMessage = `{"messageType":"SDPAnswer","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoiYW5zd2VyIn0=","senderClientID":"TestClientId"}'`
+	sdpAnswerViewer        = `{"action":"SDPAnswer","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoiYW5zd2VyIn0="}`
+	sdpAnswerMasterMessage = `{"messageType":"SDPAnswer","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoiYW5zd2VyIn0="}'`
+	sdpAnswerMaster        = `{"action":"SDPAnswer","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoiYW5zd2VyIn0=","recipientClientID":"TestClientId"}`
 
-	ICE_CANDIDATE = `{"candidate":"upd 10.111.34.88","sdpMid":"1","sdpMLineIndex":1}`
+	ICECandidate = `{"candidate":"upd 10.111.34.88","sdpMid":"1","sdpMLineIndex":1}`
 
-	ICE_CANDIDATE_VIEWER_STRING  = `{"action":"ICE_CANDIDATE","messagePayload":"eyJjYW5kaWRhdGUiOiJ1cGQgMTAuMTExLjM0Ljg4Iiwic2RwTWlkIjoiMSIsInNkcE1MaW5lSW5kZXgiOjF9"}`
-	ICE_CANDIDATE_VIEWER_MESSAGE = `{"messageType":"ICE_CANDIDATE","messagePayload":"eyJjYW5kaWRhdGUiOiJ1cGQgMTAuMTExLjM0Ljg4Iiwic2RwTWlkIjoiMSIsInNkcE1MaW5lSW5kZXgiOjF9","senderClientId":"TestClientId"}`
-	ICE_CANDIDATE_MASTER_MESSAGE = `{"messageType":"ICE_CANDIDATE","messagePayload":"eyJjYW5kaWRhdGUiOiJ1cGQgMTAuMTExLjM0Ljg4Iiwic2RwTWlkIjoiMSIsInNkcE1MaW5lSW5kZXgiOjF9"}`
-	ICE_CANDIDATE_MASTER_STRING  = `{"action":"ICE_CANDIDATE","messagePayload":"eyJjYW5kaWRhdGUiOiJ1cGQgMTAuMTExLjM0Ljg4Iiwic2RwTWlkIjoiMSIsInNkcE1MaW5lSW5kZXgiOjF9","recipientClientId":"TestClientId"}`
+	iceCandidateViewer        = `{"action":"ICECandidate","messagePayload":"eyJjYW5kaWRhdGUiOiJ1cGQgMTAuMTExLjM0Ljg4Iiwic2RwTWlkIjoiMSIsInNkcE1MaW5lSW5kZXgiOjF9"}`
+	iceCandidateViewerMessage = `{"messageType":"ICECandidate","messagePayload":"eyJjYW5kaWRhdGUiOiJ1cGQgMTAuMTExLjM0Ljg4Iiwic2RwTWlkIjoiMSIsInNkcE1MaW5lSW5kZXgiOjF9","senderClientID":"TestClientId"}`
+	iceCandidateMasterMessage = `{"messageType":"ICECandidate","messagePayload":"eyJjYW5kaWRhdGUiOiJ1cGQgMTAuMTExLjM0Ljg4Iiwic2RwTWlkIjoiMSIsInNkcE1MaW5lSW5kZXgiOjF9"}`
+	iceCandidateMaster        = `{"action":"ICECandidate","messagePayload":"eyJjYW5kaWRhdGUiOiJ1cGQgMTAuMTExLjM0Ljg4Iiwic2RwTWlkIjoiMSIsInNkcE1MaW5lSW5kZXgiOjF9","recipientClientID":"TestClientId"}`
 )
 
 // Testing signaling configures
 var configMaster signaling.Config
 var configViewer signaling.Config
-
-var dateProvider signer.DateProvier
 
 // Signer mock
 type mockSigner struct {
@@ -93,7 +91,6 @@ func (m *mockWebSocket) Close() {
 	if m.onClose != nil {
 		m.onClose()
 	}
-	return
 }
 
 // Mock Websocket Dial Function
@@ -110,7 +107,7 @@ func (m *mockWebSocket) Send(msgType int, data []byte) error {
 }
 
 // Mock set url Function
-func (m *mockWebSocket) SetUrl(url string) error {
+func (m *mockWebSocket) SetURL(url string) error {
 	args := m.Called(url)
 	return args.Error(0)
 }
@@ -120,19 +117,19 @@ func InitInfo() {
 
 	// Signaling config for Viewer connect
 	configViewer = signaling.Config{
-		ChannelARN:      &CHANNEL_ARN,
+		ChannelARN:      &channelARN,
 		Region:          &REGION,
 		ChannelEndpoint: &ENDPOINT,
-		Role:            signaling.VIEWER,
-		ClientId:        &CLIENT_ID,
+		Role:            signaling.Viewer,
+		ClientID:        &clientID,
 	}
 
 	// Signaling config for Viewer connect
 	configMaster = signaling.Config{
-		ChannelARN:      &CHANNEL_ARN,
+		ChannelARN:      &channelARN,
 		Region:          &REGION,
 		ChannelEndpoint: &ENDPOINT,
-		Role:            signaling.MASTER,
+		Role:            signaling.Master,
 	}
 
 }
@@ -145,7 +142,7 @@ func TestConstructorViewer(t *testing.T) {
 	// New Signaling
 	_, err := signaling.New(&configViewer)
 
-	//if something wrong happened
+	// if something wrong happened
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
@@ -156,13 +153,13 @@ func TestConstructorMaster(t *testing.T) {
 	// Load Initial values
 	InitInfo()
 
-	// Delete ClientId from config
-	configMaster.ClientId = nil
+	// Delete ClientID from config
+	configMaster.ClientID = nil
 
 	// New Signaling
 	_, err := signaling.New(&configMaster)
 
-	//if something wrong happened
+	// if something wrong happened
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
@@ -181,45 +178,45 @@ func TestConstructorNoConfig(t *testing.T) {
 	assert.EqualErrorf(t, err, expectedErrorMsg, "Error should be: %v, got: %v", expectedErrorMsg, err)
 }
 
-// Testing New Signaling error when config without ClientId
-func TestConstructorNoClientId(t *testing.T) {
+// Testing New Signaling error when config without ClientID
+func TestConstructorNoClientID(t *testing.T) {
 	// Load Initial values
 	InitInfo()
 
-	// Delete ClientId from config
-	configViewer.ClientId = nil
+	// Delete ClientID from config
+	configViewer.ClientID = nil
 
 	// New Signaling
 	_, err := signaling.New(&configViewer)
 
 	// Expected Error
-	expectedErrorMsg := "clientId cannot be nil"
+	expectedErrorMsg := "clientID cannot be nil"
 	assert.EqualErrorf(t, err, expectedErrorMsg, "Error should be: %v, got: %v", expectedErrorMsg, err)
 }
 
-// Testing New Signaling error when config master with ClientId
-func TestConstructorMasterWithClientId(t *testing.T) {
+// Testing New Signaling error when config master with ClientID
+func TestConstructorMasterWithClientID(t *testing.T) {
 	// Load Initial values
 	InitInfo()
 
-	// Add ClientId to config
-	var clientId string = "FAKECLIENT"
-	configMaster.ClientId = &clientId
+	// Add ClientID to config
+	var clientID = "FAKECLIENT"
+	configMaster.ClientID = &clientID
 
 	// New Signaling
 	_, err := signaling.New(&configMaster)
 
 	// Expected Error
-	expectedErrorMsg := "clientId should be nil when master selected"
+	expectedErrorMsg := "clientID should be nil when master selected"
 	assert.EqualErrorf(t, err, expectedErrorMsg, "Error should be: %v, got: %v", expectedErrorMsg, err)
 }
 
-// Testing New Signaling error when config without ChannelARN
-func TestConstructorWithoutChannelARN(t *testing.T) {
+// Testing New Signaling error when config without channelARN
+func TestConstructorWithoutchannelARN(t *testing.T) {
 	// Load Initial values
 	InitInfo()
 
-	// Delete ChannelARN from config
+	// Delete channelARN from config
 	configMaster.ChannelARN = nil
 
 	// New Signaling
@@ -282,14 +279,14 @@ func TestOpenConnectionAsViewer(t *testing.T) {
 
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
 	ownMockWebsocket.On("OnOpen", mock.AnythingOfType("func")).Return()
 
 	// New Signaling with mock
 	client, err := signaling.New(&configViewer, signaling.WithSigner(ownMockSigner), signaling.WithWebsocketClient(ownMockWebsocket))
 
-	//if something wrong happened
+	// if something wrong happened
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
@@ -298,8 +295,8 @@ func TestOpenConnectionAsViewer(t *testing.T) {
 	client.OnOpen(func() {
 		// Expected Called with
 		ownMockSigner.AssertCalled(t, "GetSignedURL", ENDPOINT, signer.QueryParams{
-			"X-Amz-ChannelARN": CHANNEL_ARN,
-			"X-Amz-ClientId":   CLIENT_ID},
+			"X-Amz-channelARN": channelARN,
+			"X-Amz-ClientID":   clientID},
 			mock.Anything)
 		c <- "done"
 	})
@@ -337,13 +334,13 @@ func TestOpenConnectionAsMaster(t *testing.T) {
 
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
 
 	// New Signaling with mock
 	client, err := signaling.New(&configMaster, signaling.WithSigner(ownMockSigner), signaling.WithWebsocketClient(ownMockWebsocket))
 
-	//if something wrong happened
+	// if something wrong happened
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
@@ -352,7 +349,7 @@ func TestOpenConnectionAsMaster(t *testing.T) {
 	client.OnOpen(func() {
 		// Expected Called with
 		ownMockSigner.AssertCalled(t, "GetSignedURL", ENDPOINT, signer.QueryParams{
-			"X-Amz-ChannelARN": CHANNEL_ARN},
+			"X-Amz-channelARN": channelARN},
 			mock.Anything)
 		c <- "done"
 	})
@@ -393,13 +390,13 @@ func TestOpenConnectionClockOffset(t *testing.T) {
 
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
 
 	// New Signaling with mock
 	client, err := signaling.New(&configViewer, signaling.WithSigner(ownMockSigner), signaling.WithWebsocketClient(ownMockWebsocket))
 
-	//if something wrong happened
+	// if something wrong happened
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
@@ -408,8 +405,8 @@ func TestOpenConnectionClockOffset(t *testing.T) {
 	client.OnOpen(func() {
 		// Expected Called with
 		ownMockSigner.AssertCalled(t, "GetSignedURL", ENDPOINT, signer.QueryParams{
-			"X-Amz-ChannelARN": CHANNEL_ARN,
-			"X-Amz-ClientId":   CLIENT_ID},
+			"X-Amz-channelARN": channelARN,
+			"X-Amz-ClientID":   clientID},
 			mock.Anything) // TODO: Test GeDate()
 		c <- "done"
 	})
@@ -443,20 +440,20 @@ func TestOpen2Times(t *testing.T) {
 
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
 
 	// New Signaling with mock
 	client, err := signaling.New(&configViewer, signaling.WithSigner(ownMockSigner), signaling.WithWebsocketClient(ownMockWebsocket))
 
-	//if something wrong happened
+	// if something wrong happened
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
 
 	// If Error Event
 	client.OnError(func(err error) {
-		expectedErrorMsg := "Client is already open, opening, or closing"
+		expectedErrorMsg := "client is already open, opening, or closing"
 		assert.EqualErrorf(t, err, expectedErrorMsg, "Error should be: %v, got: %v", expectedErrorMsg, err)
 	})
 
@@ -470,7 +467,7 @@ func TestOpen2Times(t *testing.T) {
 
 	err = client.Open()
 	// Expected Error
-	expectedErrorMsg := "Client is already open, opening, or closing"
+	expectedErrorMsg := "client is already open, opening, or closing"
 	assert.EqualErrorf(t, err, expectedErrorMsg, "Error should be: %v, got: %v", expectedErrorMsg, err)
 
 }
@@ -494,7 +491,7 @@ func TestOpenEmitError(t *testing.T) {
 
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
 
 	// New Signaling with mock
@@ -514,6 +511,11 @@ func TestOpenEmitError(t *testing.T) {
 
 	// Signaling Open Connection
 	err = client.Open()
+
+	// if something wrong happened
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 
 	// Wait until done
 	if <-c != "done" {
@@ -539,7 +541,7 @@ func TestCloseOpenConnection(t *testing.T) {
 
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
 	ownMockWebsocket.On("Close").Return()
 
@@ -563,7 +565,12 @@ func TestCloseOpenConnection(t *testing.T) {
 	})
 
 	// Signaling Open Connection
-	client.Open()
+	err = client.Open()
+
+	// if something wrong happened
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 
 	// Wait until done
 	if <-c != "done" {
@@ -590,7 +597,7 @@ func TestCloseOpenConnectionDoNothing(t *testing.T) {
 
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
 	ownMockWebsocket.On("Close").Return()
 
@@ -616,8 +623,12 @@ func TestCloseOpenConnectionDoNothing(t *testing.T) {
 	})
 
 	// Signaling Open Connection
-	client.Open()
+	err = client.Open()
 
+	// if something wrong happened
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	// Wait until done
 	if <-c != "done" {
 		t.Errorf("Unexpected error")
@@ -647,7 +658,7 @@ func TestCloseNotOpenConnectionDoNothing(t *testing.T) {
 
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
 	ownMockWebsocket.On("Close").Return()
 
@@ -683,7 +694,7 @@ func TestSendSdpOfferFromViewer(t *testing.T) {
 	ownMockWebsocket := &mockWebSocket{}
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
 	ownMockWebsocket.On("Close").Return()
 	ownMockWebsocket.On("Send", mock.Anything, mock.Anything).Return(nil)
@@ -698,13 +709,18 @@ func TestSendSdpOfferFromViewer(t *testing.T) {
 
 	// if open event
 	client.OnOpen(func() {
-		client.SendSdpOffer(SDP_OFFER, nil)
-		ownMockWebsocket.AssertCalled(t, "Send", signaling.TextMessage, []byte(SDP_OFFER_VIEWER_STRING))
+		client.SendSdpOffer(SDPOffer, nil)
+		ownMockWebsocket.AssertCalled(t, "Send", signaling.TextMessage, []byte(sdpOfferViewer))
 		c <- "done"
 	})
 
 	// Signaling Open Connection
-	client.Open()
+	err = client.Open()
+
+	// if something wrong happened
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 
 	// Wait until done
 	if <-c != "done" {
@@ -729,7 +745,7 @@ func TestSendSdpOfferFromMaster(t *testing.T) {
 	ownMockWebsocket := &mockWebSocket{}
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
 	ownMockWebsocket.On("Close").Return()
 	ownMockWebsocket.On("Send", mock.Anything, mock.Anything).Return(nil)
@@ -744,13 +760,18 @@ func TestSendSdpOfferFromMaster(t *testing.T) {
 
 	// if open event
 	client.OnOpen(func() {
-		client.SendSdpOffer(SDP_OFFER, &CLIENT_ID)
-		ownMockWebsocket.AssertCalled(t, "Send", signaling.TextMessage, []byte(SDP_OFFER_MASTER_STRING))
+		client.SendSdpOffer(SDPOffer, &clientID)
+		ownMockWebsocket.AssertCalled(t, "Send", signaling.TextMessage, []byte(sdpOfferMaster))
 		c <- "done"
 	})
 
 	// Signaling Open Connection
-	client.Open()
+	err = client.Open()
+
+	// if something wrong happened
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 
 	// Wait until done
 	if <-c != "done" {
@@ -772,7 +793,7 @@ func TestSendSdpOfferIfConnectionNotOpen(t *testing.T) {
 	ownMockWebsocket := &mockWebSocket{}
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
 	ownMockWebsocket.On("Close").Return()
 	ownMockWebsocket.On("Send", mock.Anything, mock.Anything).Return(nil)
@@ -787,11 +808,11 @@ func TestSendSdpOfferIfConnectionNotOpen(t *testing.T) {
 
 	// if error event
 	client.OnError(func(err error) {
-		expectedErrorMsg := "Could not send message because the connection to the signaling service is not open."
+		expectedErrorMsg := "could not send message because the connection to the signaling service is not open"
 		assert.EqualErrorf(t, err, expectedErrorMsg, "Error should be: %v, got: %v", expectedErrorMsg, err)
 	})
 	// Send Offer
-	client.SendSdpOffer(SDP_OFFER_VIEWER_STRING, &CLIENT_ID)
+	client.SendSdpOffer(sdpOfferViewer, &clientID)
 }
 
 // Testing Sdp Offer error from viewer add clientid
@@ -811,7 +832,7 @@ func TestSendSdpOfferIdAsViewer(t *testing.T) {
 	ownMockWebsocket := &mockWebSocket{}
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
 	ownMockWebsocket.On("Close").Return()
 	ownMockWebsocket.On("Send", mock.Anything, mock.Anything).Return(nil)
@@ -826,19 +847,23 @@ func TestSendSdpOfferIdAsViewer(t *testing.T) {
 
 	// if open event
 	client.OnOpen(func() {
-		client.SendSdpOffer(SDP_OFFER, &CLIENT_ID)
+		client.SendSdpOffer(SDPOffer, &clientID)
 	})
 
 	// if error event
 	client.OnError(func(err error) {
-		expectedErrorMsg := "Unexpected recipient client id. As the VIEWER, messages must not be sent with a recipient client id."
+		expectedErrorMsg := "unexpected recipient client id. As the VIEWER, messages must not be sent with a recipient client id"
 		assert.EqualErrorf(t, err, expectedErrorMsg, "Error should be: %v, got: %v", expectedErrorMsg, err)
 		c <- "done"
 	})
 
 	// Signaling Open Connection
-	client.Open()
+	err = client.Open()
 
+	// if something wrong happened
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	// Wait until done
 	if <-c != "done" {
 		t.Errorf("Unexpected error")
@@ -863,7 +888,7 @@ func TestSendSdpAnswerfromViewer(t *testing.T) {
 	ownMockWebsocket := &mockWebSocket{}
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
 	ownMockWebsocket.On("Close").Return()
 	ownMockWebsocket.On("Send", mock.Anything, mock.Anything).Return(nil)
@@ -878,14 +903,18 @@ func TestSendSdpAnswerfromViewer(t *testing.T) {
 
 	// if open event
 	client.OnOpen(func() {
-		client.SendSdpAnswer(SDP_ANSWER, nil)
-		ownMockWebsocket.AssertCalled(t, "Send", signaling.TextMessage, []byte(SDP_ANSWER_VIEWER_STRING))
+		client.SendSdpAnswer(SDPAnswer, nil)
+		ownMockWebsocket.AssertCalled(t, "Send", signaling.TextMessage, []byte(sdpAnswerViewer))
 		c <- "done"
 	})
 
 	// Signaling Open Connection
-	client.Open()
+	err = client.Open()
 
+	// if something wrong happened
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	// Wait until done
 	if <-c != "done" {
 		t.Errorf("Unexpected error")
@@ -909,7 +938,7 @@ func TestSendSdpAnswerAsMaster(t *testing.T) {
 	ownMockWebsocket := &mockWebSocket{}
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
 	ownMockWebsocket.On("Close").Return()
 	ownMockWebsocket.On("Send", mock.Anything, mock.Anything).Return(nil)
@@ -924,14 +953,18 @@ func TestSendSdpAnswerAsMaster(t *testing.T) {
 
 	// if open event
 	client.OnOpen(func() {
-		client.SendSdpAnswer(SDP_ANSWER, &CLIENT_ID)
-		ownMockWebsocket.AssertCalled(t, "Send", signaling.TextMessage, []byte(SDP_ANSWER_MASTER_STRING))
+		client.SendSdpAnswer(SDPAnswer, &clientID)
+		ownMockWebsocket.AssertCalled(t, "Send", signaling.TextMessage, []byte(sdpAnswerMaster))
 		c <- "done"
 	})
 
 	// Signaling Open Connection
-	client.Open()
+	err = client.Open()
 
+	// if something wrong happened
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	// Wait until done
 	if <-c != "done" {
 		t.Errorf("Unexpected error")
@@ -952,7 +985,7 @@ func TestSendSdpAnswerIfConnectionNotOpen(t *testing.T) {
 	ownMockWebsocket := &mockWebSocket{}
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
 	ownMockWebsocket.On("Close").Return()
 	ownMockWebsocket.On("Send", mock.Anything, mock.Anything).Return(nil)
@@ -967,12 +1000,12 @@ func TestSendSdpAnswerIfConnectionNotOpen(t *testing.T) {
 
 	// if error event
 	client.OnError(func(err error) {
-		expectedErrorMsg := "Could not send message because the connection to the signaling service is not open."
+		expectedErrorMsg := "could not send message because the connection to the signaling service is not open"
 		assert.EqualErrorf(t, err, expectedErrorMsg, "Error should be: %v, got: %v", expectedErrorMsg, err)
 	})
 
 	// Send SDP
-	client.SendSdpAnswer(SDP_ANSWER, &CLIENT_ID)
+	client.SendSdpAnswer(SDPAnswer, &clientID)
 
 }
 
@@ -993,7 +1026,7 @@ func TestSendSdpAnswerIdAsViewer(t *testing.T) {
 	ownMockWebsocket := &mockWebSocket{}
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
 	ownMockWebsocket.On("Close").Return()
 	ownMockWebsocket.On("Send", mock.Anything, mock.Anything).Return(nil)
@@ -1008,19 +1041,23 @@ func TestSendSdpAnswerIdAsViewer(t *testing.T) {
 
 	// if open event
 	client.OnOpen(func() {
-		client.SendSdpAnswer(SDP_ANSWER, &CLIENT_ID)
+		client.SendSdpAnswer(SDPAnswer, &clientID)
 	})
 
 	// if error event
 	client.OnError(func(err error) {
-		expectedErrorMsg := "Unexpected recipient client id. As the VIEWER, messages must not be sent with a recipient client id."
+		expectedErrorMsg := "unexpected recipient client id. As the VIEWER, messages must not be sent with a recipient client id"
 		assert.EqualErrorf(t, err, expectedErrorMsg, "Error should be: %v, got: %v", expectedErrorMsg, err)
 		c <- "done"
 	})
 
 	// Signaling Open Connection
-	client.Open()
+	err = client.Open()
 
+	// if something wrong happened
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	// Wait until done
 	if <-c != "done" {
 		t.Errorf("Unexpected error")
@@ -1045,7 +1082,7 @@ func TestSendIceCandidateAsViewer(t *testing.T) {
 	ownMockWebsocket := &mockWebSocket{}
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
 	ownMockWebsocket.On("Close").Return()
 	ownMockWebsocket.On("Send", mock.Anything, mock.Anything).Return(nil)
@@ -1060,14 +1097,18 @@ func TestSendIceCandidateAsViewer(t *testing.T) {
 
 	// if open event
 	client.OnOpen(func() {
-		client.SendIceCandidate(ICE_CANDIDATE, nil)
-		ownMockWebsocket.AssertCalled(t, "Send", signaling.TextMessage, []byte(ICE_CANDIDATE_VIEWER_STRING))
+		client.SendIceCandidate(ICECandidate, nil)
+		ownMockWebsocket.AssertCalled(t, "Send", signaling.TextMessage, []byte(iceCandidateViewer))
 		c <- "done"
 	})
 
 	// Signaling Open Connection
-	client.Open()
+	err = client.Open()
 
+	// if something wrong happened
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	// Wait until done
 	if <-c != "done" {
 		t.Errorf("Unexpected error")
@@ -1091,7 +1132,7 @@ func TestSendIceCandidateAsMaster(t *testing.T) {
 	ownMockWebsocket := &mockWebSocket{}
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
 	ownMockWebsocket.On("Close").Return()
 	ownMockWebsocket.On("Send", mock.Anything, mock.Anything).Return(nil)
@@ -1106,14 +1147,18 @@ func TestSendIceCandidateAsMaster(t *testing.T) {
 
 	// if open event
 	client.OnOpen(func() {
-		client.SendIceCandidate(ICE_CANDIDATE, &CLIENT_ID)
-		ownMockWebsocket.AssertCalled(t, "Send", signaling.TextMessage, []byte(ICE_CANDIDATE_MASTER_STRING))
+		client.SendIceCandidate(ICECandidate, &clientID)
+		ownMockWebsocket.AssertCalled(t, "Send", signaling.TextMessage, []byte(iceCandidateMaster))
 		c <- "done"
 	})
 
 	// Signaling Open Connection
-	client.Open()
+	err = client.Open()
 
+	// if something wrong happened
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	// Wait until done
 	if <-c != "done" {
 		t.Errorf("Unexpected error")
@@ -1134,7 +1179,7 @@ func TestSendIceCandidateIfConnectionNotOpen(t *testing.T) {
 	ownMockWebsocket := &mockWebSocket{}
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
 	ownMockWebsocket.On("Close").Return()
 	ownMockWebsocket.On("Send", mock.Anything, mock.Anything).Return(nil)
@@ -1149,12 +1194,12 @@ func TestSendIceCandidateIfConnectionNotOpen(t *testing.T) {
 
 	// if error event
 	client.OnError(func(err error) {
-		expectedErrorMsg := "Could not send message because the connection to the signaling service is not open."
+		expectedErrorMsg := "could not send message because the connection to the signaling service is not open"
 		assert.EqualErrorf(t, err, expectedErrorMsg, "Error should be: %v, got: %v", expectedErrorMsg, err)
 	})
 
 	// Send ICE
-	client.SendIceCandidate(ICE_CANDIDATE, &CLIENT_ID)
+	client.SendIceCandidate(ICECandidate, &clientID)
 }
 
 // Testing Ice Candidate error from viewer add clientid
@@ -1174,7 +1219,7 @@ func TestSendIceCandidateIdAsViewer(t *testing.T) {
 	ownMockWebsocket := &mockWebSocket{}
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
 	ownMockWebsocket.On("Close").Return()
 	ownMockWebsocket.On("Send", mock.Anything, mock.Anything).Return(nil)
@@ -1189,19 +1234,23 @@ func TestSendIceCandidateIdAsViewer(t *testing.T) {
 
 	// if open event
 	client.OnOpen(func() {
-		client.SendIceCandidate(ICE_CANDIDATE, &CLIENT_ID)
+		client.SendIceCandidate(ICECandidate, &clientID)
 	})
 
 	// if error event
 	client.OnError(func(err error) {
-		expectedErrorMsg := "Unexpected recipient client id. As the VIEWER, messages must not be sent with a recipient client id."
+		expectedErrorMsg := "unexpected recipient client id. As the VIEWER, messages must not be sent with a recipient client id"
 		assert.EqualErrorf(t, err, expectedErrorMsg, "Error should be: %v, got: %v", expectedErrorMsg, err)
 		c <- "done"
 	})
 
 	// Signaling Open Connection
-	client.Open()
+	err = client.Open()
 
+	// if something wrong happened
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	// Wait until done
 	if <-c != "done" {
 		t.Errorf("Unexpected error")
@@ -1226,7 +1275,7 @@ func TestEventIgnoreMsg(t *testing.T) {
 	ownMockWebsocket := &mockWebSocket{}
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("Close").Return()
 	ownMockWebsocket.On("Send", mock.Anything, mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
@@ -1241,7 +1290,7 @@ func TestEventIgnoreMsg(t *testing.T) {
 	}
 
 	// if sdp Offer event
-	client.OnSdpOffer(func(offer *string, remoteClientId *string) {
+	client.OnSdpOffer(func(offer *string, remoteClientID *string) {
 		c <- "done"
 	})
 
@@ -1252,13 +1301,17 @@ func TestEventIgnoreMsg(t *testing.T) {
 		ownMockWebsocket.onMessage(signaling.TextMessage, []byte("not valid JSON"))
 
 		// Valid Message
-		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(SDP_OFFER_MASTER_MESSAGE))
-		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(SDP_OFFER_MASTER_MESSAGE))
+		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(sdpOfferMasterMessage))
+		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(sdpOfferMasterMessage))
 	})
 
 	// Signaling Open Connection
-	client.Open()
+	err = client.Open()
 
+	// if something wrong happened
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	// Wait until done
 	if <-c != "done" {
 		t.Errorf("Unexpected error")
@@ -1282,7 +1335,7 @@ func TestEventSdpOfferFromMaster(t *testing.T) {
 	ownMockWebsocket := &mockWebSocket{}
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("Close").Return()
 	ownMockWebsocket.On("Send", mock.Anything, mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
@@ -1296,21 +1349,25 @@ func TestEventSdpOfferFromMaster(t *testing.T) {
 	}
 
 	// if sdp Offer event
-	client.OnSdpOffer(func(offer *string, senderClientId *string) {
-		assert.Equal(t, *offer, SDP_OFFER)
-		assert.Equal(t, *senderClientId, "")
+	client.OnSdpOffer(func(offer *string, senderClientID *string) {
+		assert.Equal(t, *offer, SDPOffer)
+		assert.Equal(t, *senderClientID, "")
 		c <- "done"
 	})
 
 	// if open event
 	client.OnOpen(func() {
-		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(SDP_OFFER_MASTER_MESSAGE))
-		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(SDP_OFFER_MASTER_MESSAGE))
+		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(sdpOfferMasterMessage))
+		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(sdpOfferMasterMessage))
 	})
 
 	// Signaling Open Connection
-	client.Open()
+	err = client.Open()
 
+	// if something wrong happened	// if something wrong happened
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	// Wait until done
 	if <-c != "done" {
 		t.Errorf("Unexpected error")
@@ -1335,7 +1392,7 @@ func TestEventSdpOfferFromViewer(t *testing.T) {
 	ownMockWebsocket := &mockWebSocket{}
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("Close").Return()
 	ownMockWebsocket.On("Send", mock.Anything, mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
@@ -1349,21 +1406,25 @@ func TestEventSdpOfferFromViewer(t *testing.T) {
 	}
 
 	// if sdp Offer event
-	client.OnSdpOffer(func(offer *string, senderClientId *string) {
-		assert.Equal(t, *offer, SDP_OFFER)
-		assert.Equal(t, *senderClientId, CLIENT_ID)
+	client.OnSdpOffer(func(offer *string, senderClientID *string) {
+		assert.Equal(t, *offer, SDPOffer)
+		assert.Equal(t, *senderClientID, clientID)
 		c <- "done"
 	})
 
 	// if open event
 	client.OnOpen(func() {
-		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(SDP_OFFER_VIEWER_MESSAGE))
-		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(SDP_OFFER_VIEWER_MESSAGE))
+		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(sdpOfferViewerMessage))
+		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(sdpOfferViewerMessage))
 	})
 
 	// Signaling Open Connection
-	client.Open()
+	err = client.Open()
 
+	// if something wrong happened	// if something wrong happened
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	// Wait until done
 	if <-c != "done" {
 		t.Errorf("Unexpected error")
@@ -1388,7 +1449,7 @@ func TestEventSdpOfferFromMasterAndPendingICE(t *testing.T) {
 	ownMockWebsocket := &mockWebSocket{}
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("Close").Return()
 	ownMockWebsocket.On("Send", mock.Anything, mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
@@ -1402,29 +1463,33 @@ func TestEventSdpOfferFromMasterAndPendingICE(t *testing.T) {
 	}
 
 	// if sdp Offer event
-	client.OnSdpOffer(func(offer *string, senderClientId *string) {
-		assert.Equal(t, *offer, SDP_OFFER)
-		assert.Equal(t, *senderClientId, "")
-		client.OnIceCandidate(func(iceCandidate *string, clientId *string) {
-			assert.Equal(t, *iceCandidate, ICE_CANDIDATE)
-			assert.Equal(t, *clientId, "")
+	client.OnSdpOffer(func(offer *string, senderClientID *string) {
+		assert.Equal(t, *offer, SDPOffer)
+		assert.Equal(t, *senderClientID, "")
+		client.OnIceCandidate(func(iceCandidate *string, clientID *string) {
+			assert.Equal(t, *iceCandidate, ICECandidate)
+			assert.Equal(t, *clientID, "")
 		})
 		c <- "done"
 	})
 
 	// if open event
 	client.OnOpen(func() {
-		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(ICE_CANDIDATE_MASTER_MESSAGE))
-		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(ICE_CANDIDATE_MASTER_MESSAGE))
-		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(ICE_CANDIDATE_MASTER_MESSAGE))
-		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(ICE_CANDIDATE_MASTER_MESSAGE))
-		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(SDP_OFFER_MASTER_MESSAGE))
-		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(SDP_OFFER_MASTER_MESSAGE))
+		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(iceCandidateMasterMessage))
+		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(iceCandidateMasterMessage))
+		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(iceCandidateMasterMessage))
+		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(iceCandidateMasterMessage))
+		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(sdpOfferMasterMessage))
+		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(sdpOfferMasterMessage))
 	})
 
 	// Signaling Open Connection
-	client.Open()
+	err = client.Open()
 
+	// if something wrong happened	// if something wrong happened
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	// Wait until done
 	if <-c != "done" {
 		t.Errorf("Unexpected error")
@@ -1448,7 +1513,7 @@ func TestEventSdpAnswerFromMaster(t *testing.T) {
 	ownMockWebsocket := &mockWebSocket{}
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("Close").Return()
 	ownMockWebsocket.On("Send", mock.Anything, mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
@@ -1462,21 +1527,25 @@ func TestEventSdpAnswerFromMaster(t *testing.T) {
 	}
 
 	// if sdp Answer event
-	client.OnSdpAnswer(func(answer *string, clientId *string) {
-		assert.Equal(t, *answer, SDP_ANSWER)
-		assert.Equal(t, *clientId, "")
+	client.OnSdpAnswer(func(answer *string, clientID *string) {
+		assert.Equal(t, *answer, SDPAnswer)
+		assert.Equal(t, *clientID, "")
 		c <- "done"
 	})
 
 	// if open event
 	client.OnOpen(func() {
-		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(SDP_ANSWER_MASTER_MESSAGE))
-		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(SDP_ANSWER_MASTER_MESSAGE))
+		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(sdpAnswerMasterMessage))
+		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(sdpAnswerMasterMessage))
 	})
 
 	// Signaling Open Connection
-	client.Open()
+	err = client.Open()
 
+	// if something wrong happened	// if something wrong happened
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	// Wait until done
 	if <-c != "done" {
 		t.Errorf("Unexpected error")
@@ -1501,7 +1570,7 @@ func TestEventSdpAnswerFromViewer(t *testing.T) {
 	ownMockWebsocket := &mockWebSocket{}
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("Close").Return()
 	ownMockWebsocket.On("Send", mock.Anything, mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
@@ -1515,21 +1584,25 @@ func TestEventSdpAnswerFromViewer(t *testing.T) {
 	}
 
 	// if sdp Answer event
-	client.OnSdpAnswer(func(answer *string, clientId *string) {
-		assert.Equal(t, *answer, SDP_ANSWER)
-		assert.Equal(t, *clientId, CLIENT_ID)
+	client.OnSdpAnswer(func(answer *string, clientIDA *string) {
+		assert.Equal(t, *answer, SDPAnswer)
+		assert.Equal(t, clientID, *clientIDA)
 		c <- "done"
 	})
 
 	// if open event
 	client.OnOpen(func() {
-		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(SDP_ANSWER_VIEWER_MESSAGE))
-		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(SDP_ANSWER_VIEWER_MESSAGE))
+		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(sdpAnswerViewerMessage))
+		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(sdpAnswerViewerMessage))
 	})
 
 	// Signaling Open Connection
-	client.Open()
+	err = client.Open()
 
+	// if something wrong happened	// if something wrong happened
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	// Wait until done
 	if <-c != "done" {
 		t.Errorf("Unexpected error")
@@ -1554,7 +1627,7 @@ func TestEventSdpAnswerFromMasterAndPendingICE(t *testing.T) {
 	ownMockWebsocket := &mockWebSocket{}
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("Close").Return()
 	ownMockWebsocket.On("Send", mock.Anything, mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
@@ -1568,29 +1641,33 @@ func TestEventSdpAnswerFromMasterAndPendingICE(t *testing.T) {
 	}
 
 	// if sdp Answer event
-	client.OnSdpAnswer(func(answer *string, clientId *string) {
-		assert.Equal(t, *answer, SDP_ANSWER)
-		assert.Equal(t, *clientId, "")
-		client.OnIceCandidate(func(iceCandidate *string, clientId *string) {
-			assert.Equal(t, *iceCandidate, ICE_CANDIDATE)
-			assert.Equal(t, *clientId, "")
+	client.OnSdpAnswer(func(answer *string, clientID *string) {
+		assert.Equal(t, *answer, SDPAnswer)
+		assert.Equal(t, *clientID, "")
+		client.OnIceCandidate(func(iceCandidate *string, clientID *string) {
+			assert.Equal(t, *iceCandidate, ICECandidate)
+			assert.Equal(t, *clientID, "")
 		})
 		c <- "done"
 	})
 
 	// if open event
 	client.OnOpen(func() {
-		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(ICE_CANDIDATE_MASTER_MESSAGE))
-		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(ICE_CANDIDATE_MASTER_MESSAGE))
-		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(ICE_CANDIDATE_MASTER_MESSAGE))
-		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(ICE_CANDIDATE_MASTER_MESSAGE))
-		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(SDP_ANSWER_MASTER_MESSAGE))
-		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(SDP_ANSWER_MASTER_MESSAGE))
+		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(iceCandidateMasterMessage))
+		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(iceCandidateMasterMessage))
+		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(iceCandidateMasterMessage))
+		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(iceCandidateMasterMessage))
+		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(sdpAnswerMasterMessage))
+		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(sdpAnswerMasterMessage))
 	})
 
 	// Signaling Open Connection
-	client.Open()
+	err = client.Open()
 
+	// if something wrong happened	// if something wrong happened
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	// Wait until done
 	if <-c != "done" {
 		t.Errorf("Unexpected error")
@@ -1615,7 +1692,7 @@ func TestEventIceCandidateFromMaster(t *testing.T) {
 	ownMockWebsocket := &mockWebSocket{}
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("Close").Return()
 	ownMockWebsocket.On("Send", mock.Anything, mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
@@ -1628,26 +1705,30 @@ func TestEventIceCandidateFromMaster(t *testing.T) {
 		t.Errorf("Unexpected error: %v", err)
 	}
 	// if SDP Answer Event
-	client.OnSdpAnswer(func(answer *string, clientId *string) {
+	client.OnSdpAnswer(func(answer *string, clientID *string) {
 
 	})
 	// if ICE  Event
-	client.OnIceCandidate(func(iceCandidate *string, clientId *string) {
-		assert.Equal(t, *iceCandidate, ICE_CANDIDATE)
-		assert.Equal(t, *clientId, "")
+	client.OnIceCandidate(func(iceCandidate *string, clientID *string) {
+		assert.Equal(t, *iceCandidate, ICECandidate)
+		assert.Equal(t, *clientID, "")
 		c <- "done"
 	})
 	// if open event
 	client.OnOpen(func() {
-		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(SDP_ANSWER_MASTER_MESSAGE))
-		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(SDP_ANSWER_MASTER_MESSAGE))
-		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(ICE_CANDIDATE_MASTER_MESSAGE))
-		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(ICE_CANDIDATE_MASTER_MESSAGE))
+		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(sdpAnswerMasterMessage))
+		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(sdpAnswerMasterMessage))
+		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(iceCandidateMasterMessage))
+		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(iceCandidateMasterMessage))
 	})
 
 	// Signaling Open Connection
-	client.Open()
+	err = client.Open()
 
+	// if something wrong happened	// if something wrong happened
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	// Wait until done
 	if <-c != "done" {
 		t.Errorf("Unexpected error")
@@ -1672,7 +1753,7 @@ func TestEventIceCandidateFromViewer(t *testing.T) {
 	ownMockWebsocket := &mockWebSocket{}
 	// Expected mock WebSocket functions
 	ownMockWebsocket.On("Dial").Return(nil)
-	ownMockWebsocket.On("SetUrl", mock.Anything).Return(nil)
+	ownMockWebsocket.On("SetURL", mock.Anything).Return(nil)
 	ownMockWebsocket.On("Close").Return()
 	ownMockWebsocket.On("Send", mock.Anything, mock.Anything).Return(nil)
 	ownMockWebsocket.On("OnMessage", mock.Anything, mock.Anything).Return()
@@ -1686,28 +1767,32 @@ func TestEventIceCandidateFromViewer(t *testing.T) {
 	}
 
 	// if SDP Answer Event
-	client.OnSdpAnswer(func(answer *string, clientId *string) {
+	client.OnSdpAnswer(func(answer *string, clientID *string) {
 
 	})
 
 	// if ICE Event
-	client.OnIceCandidate(func(iceCandidate *string, clientId *string) {
-		assert.Equal(t, *iceCandidate, ICE_CANDIDATE)
-		assert.Equal(t, *clientId, CLIENT_ID)
+	client.OnIceCandidate(func(iceCandidate *string, clientIDI *string) {
+		assert.Equal(t, *iceCandidate, ICECandidate)
+		assert.Equal(t, clientID, *clientIDI)
 		c <- "done"
 	})
 
 	// if open Event
 	client.OnOpen(func() {
-		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(SDP_ANSWER_VIEWER_MESSAGE))
-		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(SDP_ANSWER_VIEWER_MESSAGE))
-		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(ICE_CANDIDATE_VIEWER_MESSAGE))
-		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(ICE_CANDIDATE_VIEWER_MESSAGE))
+		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(sdpAnswerViewerMessage))
+		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(sdpAnswerViewerMessage))
+		ownMockWebsocket.On("OnMessage", mock.Anything).Return([]byte(iceCandidateViewerMessage))
+		ownMockWebsocket.onMessage(signaling.TextMessage, []byte(iceCandidateViewerMessage))
 	})
 
 	// Signaling Open Connection
-	client.Open()
+	err = client.Open()
 
+	// if something wrong happened	// if something wrong happened
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	// Wait until done
 	if <-c != "done" {
 		t.Errorf("Unexpected error")

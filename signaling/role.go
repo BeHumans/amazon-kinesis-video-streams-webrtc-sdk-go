@@ -1,11 +1,15 @@
 package signaling
 
-// Type of signaling connection as
+// Role Type of signaling connection actor
 type Role string
 
 // Signaling connection types
 const (
-	MASTER            Role = "MASTER"
-	VIEWER            Role = "VIEWER"
-	DEFAULT_CLIENT_ID Role = "MASTER"
+	Master Role = "MASTER"
+	Viewer Role = "VIEWER"
+)
+
+// DefaultClientID value when it not exist
+const (
+	DefaultClientID = "MASTER"
 )

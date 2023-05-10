@@ -15,7 +15,7 @@ var region string
 var date time.Time
 var queryParams map[string]string
 var credetialsValue credentials.Value
-var testSigner signer.SignerAPI
+var testSigner signer.APII
 var service string
 
 // Expected Signed URLs
@@ -23,7 +23,7 @@ var expectedSignedURL = "wss://kvs.awsamazon.com/?X-Amz-Algorithm=AWS4-HMAC-SHA2
 var expectedSignedURLFirehouse = "wss://kvs.awsamazon.com/?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA4F7WJQR7FMMWMNXI%2F20191201%2Fus-west-2%2Ffirehose%2Faws4_request&X-Amz-Date=20191201T000000Z&X-Amz-Expires=299&X-Amz-Security-Token=FakeSessionToken&X-Amz-Signature=f15308513d21a381d38b7607a0439f25fc2e6c9f5ff56a48c1664b486e6234d5&X-Amz-SignedHeaders=host&X-Amz-TestParam=test-param-value"
 var expectedSignedURLWithPath = "wss://kvs.awsamazon.com/path/path/path?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA4F7WJQR7FMMWMNXI%2F20191201%2Fus-west-2%2Fkinesisvideo%2Faws4_request&X-Amz-Date=20191201T000000Z&X-Amz-Expires=299&X-Amz-Security-Token=FakeSessionToken&X-Amz-Signature=0bf3df6ca23d8d82f688e8dbfb90d69e74843d40038541b1721c545eef7612a4&X-Amz-SignedHeaders=host&X-Amz-TestParam=test-param-value"
 
-// Necesary info for each test
+// Necessary info for each test
 func InitInfo() {
 	region = "us-west-2"
 	queryParams = map[string]string{
@@ -162,10 +162,13 @@ func TestValidSignedDynamicCredentials(t *testing.T) {
 		signerV4.WithRegion(region),
 		signerV4.WithCredentialsValue(&credetialsValue),
 		signerV4.WithService(service))
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 
 	// Calling Get Signed URL with correct input parameters
 	url, err := testOwnSigner.GetSignedURL("wss://kvs.awsamazon.com", queryParams, &date)
-	//if something wrong happened
+	// if something wrong happened
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
@@ -184,7 +187,7 @@ func TestValidSignedWithoutSessionToken(t *testing.T) {
 
 	// Calling Get Signed URL with correct input parameters
 	url, err := testSigner.GetSignedURL("wss://kvs.awsamazon.com", queryParams, &date)
-	//if something wrong happened
+	// if something wrong happened
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
@@ -206,10 +209,13 @@ func TestValidSignedServiceOverride(t *testing.T) {
 		signerV4.WithRegion(region),
 		signerV4.WithCredentialsValue(&credetialsValue),
 		signerV4.WithService(service))
-
+	// if something wrong happened
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
 	// Calling Get Signed URL with correct input parameters
 	url, err := testOwnSigner.GetSignedURL("wss://kvs.awsamazon.com", queryParams, &date)
-	//if something wrong happened
+	// if something wrong happened
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
@@ -225,7 +231,8 @@ func TestValidSignedWithPath(t *testing.T) {
 
 	// Calling Get Signed URL with correct input parameters
 	url, err := testSigner.GetSignedURL("wss://kvs.awsamazon.com/path/path/path", queryParams, &date)
-	//if something wrong happened
+
+	// if something wrong happened
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
@@ -241,7 +248,7 @@ func TestValidSignedWithoutMockedDate(t *testing.T) {
 
 	// Calling Get Signed URL with correct input parameters
 	_, err := testSigner.GetSignedURL("wss://kvs.awsamazon.com", queryParams, &date)
-	//if something wrong happened
+	// if something wrong happened
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}

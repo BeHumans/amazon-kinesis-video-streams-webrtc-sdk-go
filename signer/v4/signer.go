@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	// Default Algoritm used for AWS V4 Signed
-	DEFAULT_ALGORITHM = "AWS4-HMAC-SHA256"
+	// DefaultAlgorithm used for AWS V4 Signed
+	DefaultAlgorithm = "AWS4-HMAC-SHA256"
 )
 
 // AWS V4 Signer
@@ -26,10 +26,10 @@ type Signer struct {
 // Get Signature from datestring, region and service using credentials
 func (s *Signer) getSignatureKey(dateString string) []byte {
 	cred, _ := s.Credentials.Get()
-	kDate := signer.HMAC([]byte("AWS4"+cred.SecretAccessKey), dateString)
-	kRegion := signer.HMAC(kDate, s.Region)
-	kService := signer.HMAC(kRegion, s.Service)
-	return signer.HMAC(kService, "aws4_request")
+	date := signer.HMAC([]byte("AWS4"+cred.SecretAccessKey), dateString)
+	region := signer.HMAC(date, s.Region)
+	service := signer.HMAC(region, s.Service)
+	return signer.HMAC(service, "aws4_request")
 }
 
 // Add credentials value as option
@@ -86,16 +86,16 @@ func New(options ...func(*Signer)) (*Signer, error) {
 	return rs, nil
 }
 
-// function that sign input url, input query params and input date
+// GetSignedURL function that sign input url, input query params and input date
 func (s *Signer) GetSignedURL(endpoint string, queryParams signer.QueryParams, date *time.Time) (string, error) {
 	// Get credentials to use
 	cred, err := s.Credentials.Get()
 	if err != nil {
-		return "", errors.New("Credentials for sign invalid because they are non-existent or expired.")
+		return "", errors.New("credentials for sign invalid because they are non-existent or expired")
 	}
 
 	// Get date now
-	var now time.Time = time.Now()
+	var now = time.Now()
 
 	// if you don't give me the date, now is the date
 	if date == nil {
@@ -112,8 +112,8 @@ func (s *Signer) GetSignedURL(endpoint string, queryParams signer.QueryParams, d
 		return "", errors.New("Endpoint '" + endpoint + "' is not a valid uri.")
 	}
 
-	var protocol string = "wss"
-	var urlProtocol string = protocol + "://"
+	var protocol = "wss"
+	var urlProtocol = protocol + "://"
 
 	// Check protocol
 	if u.Scheme != protocol {
@@ -144,7 +144,7 @@ func (s *Signer) GetSignedURL(endpoint string, queryParams signer.QueryParams, d
 	credentialScope := dateString + "/" + s.Region + "/" + s.Service + "/" + "aws4_request"
 
 	canonicalQueryParams := signer.MergeMaps(queryParams, map[string]string{
-		"X-Amz-Algorithm":     DEFAULT_ALGORITHM,
+		"X-Amz-Algorithm":     DefaultAlgorithm,
 		"X-Amz-Credential":    cred.AccessKeyID + "/" + credentialScope,
 		"X-Amz-Date":          datetimeString,
 		"X-Amz-Expires":       "299",
@@ -171,7 +171,7 @@ func (s *Signer) GetSignedURL(endpoint string, queryParams signer.QueryParams, d
 	canonicalRequestHash := signer.SHA256(canonicalRequest)
 
 	// Create signature
-	stringToSign := strings.Join([]string{DEFAULT_ALGORITHM, datetimeString, credentialScope, canonicalRequestHash}, "\n")
+	stringToSign := strings.Join([]string{DefaultAlgorithm, datetimeString, credentialScope, canonicalRequestHash}, "\n")
 	signingKey := s.getSignatureKey(dateString)
 	signature := signer.HMAC(signingKey, stringToSign)
 

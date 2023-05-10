@@ -3,11 +3,11 @@ package signer
 import "time"
 
 type DateProvier struct {
-	ClockOffsetMs time.Duration
+	ClockOffset time.Duration
 }
 
-// Get Date using config offset
+// GetDate using config offset
 func (d *DateProvier) GetDate() *time.Time {
-	dateOffset := time.Now().Add(d.ClockOffsetMs * time.Millisecond)
+	dateOffset := time.Now().Add(d.ClockOffset * time.Millisecond)
 	return &dateOffset
 }

@@ -16,18 +16,18 @@ import (
 type WebSocketSignalingMessageSend struct {
 	MessageType       MessageType `json:"action,omitempty"`
 	MessagePayload    string      `json:"messagePayload,omitempty"`
-	RecipientClientId string      `json:"recipientClientId,omitempty"`
+	RecipientClientID string      `json:"recipientClientID,omitempty"`
 }
 
 // Signaling msg format for Reception
 type WebSocketSignalingMessageReceive struct {
 	MessageType    MessageType `json:"messageType,omitempty"`
 	MessagePayload string      `json:"messagePayload,omitempty"`
-	SenderClientId string      `json:"senderClientId,omitempty"`
+	SenderClientID string      `json:"senderClientID,omitempty"`
 }
 
 // Default service for v4 signature
-var service string = "kinesisvideo"
+var service = "kinesisvideo"
 
 // Signaling configure
 type Config struct {
@@ -35,7 +35,7 @@ type Config struct {
 	ChannelEndpoint   *string            // WSS URL AWS signaling
 	Region            *string            // AWS Region
 	Role              Role               // Master or viewer actor
-	ClientId          *string            // Id Client for AWS signaling protocol
+	ClientID          *string            // Id Client for AWS signaling protocol
 	SystemClockOffset int                // An offset value in milliseconds to apply to all signing times
 	CredentialsValue  *credentials.Value // AWS Credentials
 }
@@ -44,62 +44,62 @@ type Config struct {
 type MessageType string
 
 const (
-	SDP_ANSWER    MessageType = "SDP_ANSWER"
-	SDP_OFFER     MessageType = "SDP_OFFER"
-	ICE_CANDIDATE MessageType = "ICE_CANDIDATE"
+	sdpAnswer    MessageType = "SDPAnswer"
+	sdpOffer     MessageType = "SDPOffer"
+	iceCandidate MessageType = "ICECandidate"
 )
 
 // Signaling connection State Type
 type ReadyStateType string
 
 const (
-	CONNECTING ReadyStateType = "CONNECTING"
-	OPEN       ReadyStateType = "OPEN"
-	CLOSING    ReadyStateType = "CLOSING"
-	CLOSED     ReadyStateType = "CLOSED"
+	connecting ReadyStateType = "CONNECTING"
+	open       ReadyStateType = "OPEN"
+	closing    ReadyStateType = "CLOSING"
+	closed     ReadyStateType = "CLOSED"
 )
 
 // Signaling client
-type SignalingClient struct {
+type Client struct {
 	readyState                     ReadyStateType                               // Signaling cient connection status
-	config                         *Config                                      // Signaling client configuration
-	signer                         signer.SignerAPI                             // V4 AWS Signer
+	config                         Config                                       // Signaling client configuration
+	signer                         signer.APII                                  // V4 AWS Signer
 	dateProvider                   *signer.DateProvier                          // Date provider for V4 AWS Signer
 	wsClient                       WebSocketClientI                             // Websocket client
 	onOpen                         func()                                       // Function for Open Event
 	onError                        func(err error)                              // Function for Error Event
 	onClose                        func()                                       // Function for Close Event
-	onSdpAnswer                    func(answer *string, clientId *string)       // Function for Sdp Answer Event
-	onSdpOffer                     func(offer *string, remoteClientId *string)  // Function for Sdp Offer Event
-	onIceCandidate                 func(iceCandidate *string, clientId *string) // Function for Ice Candidate Event
-	hasReceivedRemoteSDPByClientId map[string]bool                              // Maps for manage receive remote SDP by clientId
-	pendingIceCandidatesByClientId map[string][]string                          // Maps for manage pending Ice Candidate by clientId
+	onSdpAnswer                    func(answer *string, clientID *string)       // Function for Sdp Answer Event
+	onSdpOffer                     func(offer *string, remoteClientID *string)  // Function for Sdp Offer Event
+	onIceCandidate                 func(iceCandidate *string, clientID *string) // Function for Ice Candidate Event
+	hasReceivedRemoteSDPByClientID map[string]bool                              // Maps for manage receive remote SDP by clientID
+	pendingIceCandidatesByClientID map[string][]string                          // Maps for manage pending Ice Candidate by clientID
 }
 
 // On Open Event Function
-func (sc *SignalingClient) OnOpen(f func()) {
+func (sc *Client) OnOpen(f func()) {
 	sc.onOpen = f
 }
 
 // On Close Event Function
-func (sc *SignalingClient) OnClose(f func()) {
+func (sc *Client) OnClose(f func()) {
 	sc.onClose = f
 }
 
-// On Error Event Function
-func (sc *SignalingClient) OnError(f func(err error)) {
+// OnError Event Function
+func (sc *Client) OnError(f func(err error)) {
 	sc.onError = f
 }
 
-// On Message Event Function
-func (sc *SignalingClient) onMessage(data []byte) {
+// OnMessage Event Function
+func (sc *Client) onMessage(data []byte) {
 
 	var messageParsed WebSocketSignalingMessageReceive
 
 	// New decoder
 	dec := json.NewDecoder(bytes.NewReader(data))
 
-	// Decode data, unkown message ?
+	// Decode data, unknown message ?
 	if err := dec.Decode(&messageParsed); err != nil {
 		return
 	}
@@ -107,77 +107,77 @@ func (sc *SignalingClient) onMessage(data []byte) {
 	// Decode Base 64 payload message property
 	decodedMessagePayload, err := b64.StdEncoding.DecodeString(messageParsed.MessagePayload)
 
-	//error payload?
+	// error payload?
 	if err != nil {
 		return
 	}
 
 	// Decode message to string
-	var messagePayloadParsed string = string(decodedMessagePayload)
+	var messagePayloadParsed = string(decodedMessagePayload)
 
 	switch messageParsed.MessageType {
 	// When receive a SDP Offer
-	case SDP_OFFER:
+	case sdpOffer:
 		// Trigger on Sdp Offer Event
-		sc.onSdpOffer(&messagePayloadParsed, &messageParsed.SenderClientId)
-		sc.emitPendingIceCandidates(&messageParsed.SenderClientId)
+		sc.onSdpOffer(&messagePayloadParsed, &messageParsed.SenderClientID)
+		sc.emitPendingIceCandidates(&messageParsed.SenderClientID)
 		return
 	// When receive a SDP Answer
-	case SDP_ANSWER:
+	case sdpAnswer:
 		// trigger on Sdp Answer Event
-		sc.onSdpAnswer(&messagePayloadParsed, &messageParsed.SenderClientId)
-		sc.emitPendingIceCandidates(&messageParsed.SenderClientId)
+		sc.onSdpAnswer(&messagePayloadParsed, &messageParsed.SenderClientID)
+		sc.emitPendingIceCandidates(&messageParsed.SenderClientID)
 		return
 	// When receive a Ice Candidate
-	case ICE_CANDIDATE:
-		sc.emitOrQueueIceCandidate(&messagePayloadParsed, &messageParsed.SenderClientId)
+	case iceCandidate:
+		sc.emitOrQueueIceCandidate(&messagePayloadParsed, &messageParsed.SenderClientID)
 		return
 	default:
-		// Unkown message
+		// Unknown message
 		return
 	}
 }
 
 // On Sdp Answer Event Function
-func (sc *SignalingClient) OnSdpAnswer(f func(answer *string, clientId *string)) {
+func (sc *Client) OnSdpAnswer(f func(answer *string, clientID *string)) {
 	sc.onSdpAnswer = f
 }
 
 // On Sdp Offer Event Function
-func (sc *SignalingClient) OnSdpOffer(f func(offer *string, remoteClientId *string)) {
+func (sc *Client) OnSdpOffer(f func(offer *string, remoteClientID *string)) {
 	sc.onSdpOffer = f
 }
 
 // On ICE Candidate Event Function
-func (sc *SignalingClient) OnIceCandidate(f func(iceCandidate *string, clientId *string)) {
+func (sc *Client) OnIceCandidate(f func(iceCandidate *string, clientID *string)) {
 	sc.onIceCandidate = f
 }
 
 // Optional parameters
 
 // Use own websocket client implementation
-func WithWebsocketClient(websocket WebSocketClientI) func(*SignalingClient) {
-	return func(sc *SignalingClient) {
+func WithWebsocketClient(websocket WebSocketClientI) func(*Client) {
+	return func(sc *Client) {
 		sc.wsClient = websocket
 	}
 }
 
 // Use own v4 AWS signer implementation
-func WithSigner(signer signer.SignerAPI) func(*SignalingClient) {
-	return func(sc *SignalingClient) {
+func WithSigner(signer signer.APII) func(*Client) {
+	return func(sc *Client) {
 		sc.signer = signer
 	}
 }
 
 // Use own Date Provider implementation
-func WithDateProvider(dateProvider signer.DateProvier) func(*SignalingClient) {
-	return func(sc *SignalingClient) {
+func WithDateProvider(dateProvider signer.DateProvier) func(*Client) {
+	return func(sc *Client) {
 		sc.dateProvider = &dateProvider
 	}
 }
 
 // New signaling client
-func New(config *Config, options ...func(*SignalingClient)) (*SignalingClient, error) {
+func New(config *Config, options ...func(*Client)) (*Client, error) {
 
 	// Config must never be nil
 	if config == nil {
@@ -185,11 +185,11 @@ func New(config *Config, options ...func(*SignalingClient)) (*SignalingClient, e
 	}
 
 	// New Signaling client with initial values
-	sc := &SignalingClient{
-		readyState:                     CLOSED,
-		config:                         config,
-		hasReceivedRemoteSDPByClientId: make(map[string]bool),
-		pendingIceCandidatesByClientId: make(map[string][]string),
+	sc := &Client{
+		readyState:                     closed,
+		config:                         *config,
+		hasReceivedRemoteSDPByClientID: make(map[string]bool),
+		pendingIceCandidatesByClientID: make(map[string][]string),
 	}
 
 	// Getting other optional parameters
@@ -200,18 +200,18 @@ func New(config *Config, options ...func(*SignalingClient)) (*SignalingClient, e
 	// Nil Checkers
 
 	// When Viewer actor
-	if config.Role == VIEWER {
-		// Config clientId must never be nil
-		if config.ClientId == nil {
-			return nil, errors.New("clientId cannot be nil")
+	if config.Role == Viewer {
+		// Config clientID must never be nil
+		if config.ClientID == nil {
+			return nil, errors.New("clientID cannot be nil")
 		}
 	}
 
 	// When Master actor
-	if config.Role == MASTER {
-		// Config clientId always nil
-		if config.ClientId != nil {
-			return nil, errors.New("clientId should be nil when master selected")
+	if config.Role == Master {
+		// Config clientID always nil
+		if config.ClientID != nil {
+			return nil, errors.New("clientID should be nil when master selected")
 		}
 	}
 
@@ -232,7 +232,7 @@ func New(config *Config, options ...func(*SignalingClient)) (*SignalingClient, e
 
 	// If you are not using our signer
 	if sc.signer == nil {
-		var kinesisVideoSigner signer.SignerAPI
+		var kinesisVideoSigner signer.APII
 		var err error
 		// Do you have own Credentials ?
 		if config.CredentialsValue != nil {
@@ -245,7 +245,7 @@ func New(config *Config, options ...func(*SignalingClient)) (*SignalingClient, e
 				signerV4.WithService(service))
 		}
 
-		//if something wrong happened when sign
+		// if something wrong happened when sign
 		if err != nil {
 			return nil, err
 		}
@@ -258,7 +258,7 @@ func New(config *Config, options ...func(*SignalingClient)) (*SignalingClient, e
 	if sc.dateProvider == nil {
 		// Assing date provider
 		sc.dateProvider = &signer.DateProvier{
-			ClockOffsetMs: time.Duration(config.SystemClockOffset),
+			ClockOffset: time.Duration(config.SystemClockOffset),
 		}
 	}
 	// If you are not using our websocket client
@@ -271,10 +271,10 @@ func New(config *Config, options ...func(*SignalingClient)) (*SignalingClient, e
 }
 
 // Open Signaling Client
-func (sc *SignalingClient) Open() error {
+func (sc *Client) Open() error {
 	// Check if reOpen action
-	if sc.readyState != CLOSED {
-		err := errors.New("Client is already open, opening, or closing")
+	if sc.readyState != closed {
+		err := errors.New("client is already open, opening, or closing")
 		if sc.onError != nil {
 			// Trigger Error Event
 			sc.onError(err)
@@ -283,43 +283,43 @@ func (sc *SignalingClient) Open() error {
 	}
 
 	// Change signaling client state
-	sc.readyState = CONNECTING
+	sc.readyState = connecting
 
 	// Go Rutine for connect to websocket signaling channel
 	go func() {
 
 		// Prepare data for sign request
 		queryParams := signer.QueryParams{
-			"X-Amz-ChannelARN": *sc.config.ChannelARN,
+			"X-Amz-channelARN": *sc.config.ChannelARN,
 		}
 		// If viewer actor
-		if sc.config.Role == VIEWER {
-			queryParams["X-Amz-ClientId"] = *sc.config.ClientId
+		if sc.config.Role == Viewer {
+			queryParams["X-Amz-ClientID"] = *sc.config.ClientID
 		}
 
 		// AWS V4 Sing channel endpoint uri
 		signedURL, err := sc.signer.GetSignedURL(*sc.config.ChannelEndpoint, queryParams, sc.dateProvider.GetDate())
 
-		//if something wrong happened
+		// if something wrong happened
 		if err != nil {
 			// Trigger Error Event
 			sc.onError(err)
 		}
 
 		// If other process changed signaling client status nothing to do
-		if sc.readyState != CONNECTING {
+		if sc.readyState != connecting {
 			return
 		}
 
 		// Set signed url to websocket client
-		err = sc.wsClient.SetUrl(signedURL)
+		err = sc.wsClient.SetURL(signedURL)
 		if err != nil {
 			sc.onError(err)
 		}
 
 		// When websocket Open event do
 		sc.wsClient.OnOpen(func() {
-			sc.readyState = OPEN
+			sc.readyState = open
 			if sc.onOpen != nil {
 				sc.onOpen()
 			}
@@ -332,7 +332,7 @@ func (sc *SignalingClient) Open() error {
 
 		// When websocket Close event do
 		sc.wsClient.OnClose(func() {
-			sc.readyState = CLOSED
+			sc.readyState = closed
 			sc.wsClient = nil
 			sc.onClose()
 		})
@@ -348,7 +348,7 @@ func (sc *SignalingClient) Open() error {
 		// Dial websocket client
 		err = sc.wsClient.Dial()
 
-		//if something wrong happened
+		// if something wrong happened
 		if err != nil {
 			// Trigger Error Event
 			sc.onError(err)
@@ -363,15 +363,15 @@ func (sc *SignalingClient) Open() error {
 }
 
 // Close signaling client
-func (sc *SignalingClient) Close() {
+func (sc *Client) Close() {
 	// If websocket exists
 	if sc.wsClient != nil {
 		// Change signaling client status
-		sc.readyState = CLOSING
+		sc.readyState = closing
 		// Close websocket client
 		sc.wsClient.Close()
 
-	} else if sc.readyState != CLOSED {
+	} else if sc.readyState != closed {
 		// trigger Close event
 		sc.onClose()
 	}
@@ -379,47 +379,47 @@ func (sc *SignalingClient) Close() {
 }
 
 // Use for emit Ice Candidate Messages when signaling client has recive SDP message
-func (sc *SignalingClient) emitOrQueueIceCandidate(iceCandidate *string, clientId *string) {
-	var clientIdKey string
+func (sc *Client) emitOrQueueIceCandidate(iceCandidate *string, clientID *string) {
+	var clientIDKEY string
 
 	// if you don't have client Id use Default Client Id
-	if clientId == nil {
-		clientIdKey = string(DEFAULT_CLIENT_ID)
+	if clientID == nil {
+		clientIDKEY = string(DefaultClientID)
 	} else {
-		clientIdKey = *clientId
+		clientIDKEY = *clientID
 	}
 
 	// If signaling client has recive SDP message
-	if sc.hasReceivedRemoteSDPByClientId[clientIdKey] {
+	if sc.hasReceivedRemoteSDPByClientID[clientIDKEY] {
 		// trigger Ice Candidate Event
-		sc.onIceCandidate(iceCandidate, clientId)
+		sc.onIceCandidate(iceCandidate, clientID)
 	} else {
 		// If it is the first Ice Candidate message for this client Id
-		if sc.pendingIceCandidatesByClientId == nil || sc.pendingIceCandidatesByClientId[clientIdKey] == nil {
-			sc.pendingIceCandidatesByClientId[clientIdKey] = []string{}
+		if sc.pendingIceCandidatesByClientID == nil || sc.pendingIceCandidatesByClientID[clientIDKEY] == nil {
+			sc.pendingIceCandidatesByClientID[clientIDKEY] = []string{}
 		}
 		// Queue Ice Candidate Message for this client Id
-		sc.pendingIceCandidatesByClientId[clientIdKey] = append(sc.pendingIceCandidatesByClientId[clientIdKey], *iceCandidate)
+		sc.pendingIceCandidatesByClientID[clientIDKEY] = append(sc.pendingIceCandidatesByClientID[clientIDKEY], *iceCandidate)
 	}
 
 }
 
 // Use for emit Ice Candidate Messages
-func (sc *SignalingClient) emitPendingIceCandidates(clientId *string) {
-	var clientIdKey string
+func (sc *Client) emitPendingIceCandidates(clientID *string) {
+	var clientIDKEY string
 
 	// if you don't have client Id use Default Client Id
-	if clientId == nil {
-		clientIdKey = string(DEFAULT_CLIENT_ID)
+	if clientID == nil {
+		clientIDKEY = string(DefaultClientID)
 	} else {
-		clientIdKey = *clientId
+		clientIDKEY = *clientID
 	}
 
 	// Set Sdp message receive for this client id
-	sc.hasReceivedRemoteSDPByClientId[clientIdKey] = true
+	sc.hasReceivedRemoteSDPByClientID[clientIDKEY] = true
 
 	// Get Ice Candidate messages queue
-	pendingIceCandidates := sc.pendingIceCandidatesByClientId[clientIdKey]
+	pendingIceCandidates := sc.pendingIceCandidatesByClientID[clientIDKEY]
 
 	// If empty nothing to do
 	if pendingIceCandidates == nil {
@@ -427,82 +427,86 @@ func (sc *SignalingClient) emitPendingIceCandidates(clientId *string) {
 	}
 
 	// Clean Ice Candidate queue
-	sc.pendingIceCandidatesByClientId[clientIdKey] = nil
+	sc.pendingIceCandidatesByClientID[clientIDKEY] = nil
 
 	// trigger Ice Candidate events, one by one
-	for _, iceCandidate := range pendingIceCandidates {
-		sc.onIceCandidate(&iceCandidate, clientId)
+	for i := range pendingIceCandidates {
+		sc.onIceCandidate(&pendingIceCandidates[i], clientID)
 	}
 
 }
 
 // Sender signalingSdp Offer Messages
-func (sc *SignalingClient) SendSdpOffer(offer string, recipientClientId *string) {
-	var clientId string
+func (sc *Client) SendSdpOffer(sdpOfferMsg string, recipientClientID *string) {
+	var clientID string
 
 	// Assing client Id if exists
-	if recipientClientId != nil {
-		clientId = *recipientClientId
+	if recipientClientID != nil {
+		clientID = *recipientClientID
 	}
 	// Send Message
-	sc.sendMessage(SDP_OFFER, offer, clientId)
+	sc.sendMessage(sdpOffer, sdpOfferMsg, clientID)
 }
 
 // Sender signaling Ice Candidate Messages
-func (sc *SignalingClient) SendIceCandidate(iceCandidate string, recipientClientId *string) {
-	var clientId string
+func (sc *Client) SendIceCandidate(iceCandidateMsg string, recipientClientID *string) {
+	var clientID string
 
 	// Assing client Id if exists
-	if recipientClientId != nil {
-		clientId = *recipientClientId
+	if recipientClientID != nil {
+		clientID = *recipientClientID
 	}
 	// Send Message
-	sc.sendMessage(ICE_CANDIDATE, iceCandidate, clientId)
+	sc.sendMessage(iceCandidate, iceCandidateMsg, clientID)
 }
 
 // Sender signaling Sdp Answer Messages
-func (sc *SignalingClient) SendSdpAnswer(sdpAnswer string, recipientClientId *string) {
-	var clientId string
+func (sc *Client) SendSdpAnswer(sdpAnswerMsg string, recipientClientID *string) {
+	var clientID string
 
 	// Assing client Id if exists
-	if recipientClientId != nil {
-		clientId = *recipientClientId
+	if recipientClientID != nil {
+		clientID = *recipientClientID
 	}
 	// Send Message
-	sc.sendMessage(SDP_ANSWER, sdpAnswer, clientId)
+	sc.sendMessage(sdpAnswer, sdpAnswerMsg, clientID)
 }
 
 // Generic Sender signaling Messages
-func (sc *SignalingClient) sendMessage(msgType MessageType, payload string, recipientClientId string) {
+func (sc *Client) sendMessage(msgType MessageType, payload string, recipientClientID string) {
 
 	// If signaling client status is different to OPEN, you can't send message
-	if sc.readyState != OPEN {
-		err := errors.New("Could not send message because the connection to the signaling service is not open.")
+	if sc.readyState != open {
+		err := errors.New("could not send message because the connection to the signaling service is not open")
 		sc.onError(err)
 		return
 	}
 
 	// Check if Recipient Client is valid
-	if sc.validateRecipientClientId(&recipientClientId) {
+	if sc.validateRecipientClientID(&recipientClientID) {
 		// Create WebSocket Signaling Message
 		wsMessage := WebSocketSignalingMessageSend{
 			MessageType:       msgType,
 			MessagePayload:    b64.StdEncoding.EncodeToString([]byte(payload)),
-			RecipientClientId: recipientClientId,
+			RecipientClientID: recipientClientID,
 		}
 		// Encode Message
 		wsMessageBytes, _ := json.Marshal(wsMessage)
 
 		// Send Message over websocket
-		sc.wsClient.Send(TextMessage, wsMessageBytes)
+		err := sc.wsClient.Send(TextMessage, wsMessageBytes)
+		if err != nil {
+			sc.onError(err)
+			return
+		}
 	}
 
 }
 
 // Error if Recipient Client Id exists and actor is viewer
-func (sc *SignalingClient) validateRecipientClientId(recipientClientId *string) bool {
-	if sc.config.Role == VIEWER && recipientClientId != nil && *recipientClientId != "" {
-		err := errors.New("Unexpected recipient client id. As the VIEWER, messages must not be sent with a recipient client id.")
+func (sc *Client) validateRecipientClientID(recipientClientID *string) bool {
+	if sc.config.Role == Viewer && recipientClientID != nil && *recipientClientID != "" {
+		err := errors.New("unexpected recipient client id. As the VIEWER, messages must not be sent with a recipient client id")
 		sc.onError(err)
 		return false
 	}

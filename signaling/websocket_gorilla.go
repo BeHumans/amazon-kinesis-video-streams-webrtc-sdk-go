@@ -2,19 +2,20 @@ package signaling
 
 import (
 	"errors"
+	"sync"
 
 	"github.com/gorilla/websocket"
 )
 
 // WebSocket Gorilla Client implementation
 type WebSocketClient struct {
-	url       *string
-	conn      *websocket.Conn
-	isClosed  bool
-	onClose   func()
-	onOpen    func()
-	onError   func(err error)
-	onMessage func(messageType int, data []byte)
+	url      *string
+	conn     *websocket.Conn
+	isClosed bool
+	onClose  func()
+	onOpen   func()
+	onError  func(err error)
+	mu       sync.Mutex
 }
 
 // On Open Event Function
@@ -27,7 +28,7 @@ func (ws *WebSocketClient) OnClose(f func()) {
 	ws.onClose = f
 }
 
-// On Error Event Function
+// OnError Event Function
 func (ws *WebSocketClient) OnError(f func(err error)) {
 	ws.onError = f
 }
@@ -42,6 +43,11 @@ func (ws *WebSocketClient) OnMessage(dial chan string, f func(messageType int, d
 		for {
 			messageType, message, err := ws.conn.ReadMessage()
 			if err != nil {
+				// if it is error when is Closed then exit
+				if ws.isClosed {
+					return
+				}
+
 				// Error Event triggered
 				ws.onError(err)
 
@@ -72,6 +78,9 @@ func (ws *WebSocketClient) Dial() error {
 
 // Function to send data to websocket
 func (ws *WebSocketClient) Send(msgType int, data []byte) error {
+	// Connections support one concurrent writer
+	ws.mu.Lock()
+	defer ws.mu.Unlock()
 	err := ws.conn.WriteMessage(msgType, data)
 	// Something wrong?
 	if err != nil {
@@ -82,7 +91,7 @@ func (ws *WebSocketClient) Send(msgType int, data []byte) error {
 	return nil
 }
 
-// Function to close websocket greatfully
+// Close Function do websocket close gratefully
 func (ws *WebSocketClient) Close() {
 	// Check if it calls when is closed
 	if ws.isClosed {
@@ -91,7 +100,7 @@ func (ws *WebSocketClient) Close() {
 
 	ws.isClosed = true
 
-	// Websocket conection close
+	// Websocket connection close
 	ws.conn.Close()
 
 	// Don't generate the closing event if there is no associated function
@@ -102,10 +111,10 @@ func (ws *WebSocketClient) Close() {
 }
 
 // Set url of Websocket
-func (ws *WebSocketClient) SetUrl(url string) error {
+func (ws *WebSocketClient) SetURL(url string) error {
 	// Check if conn exists
 	if ws.conn != nil {
-		return errors.New("You already have an open connection")
+		return errors.New("you already have an open connection")
 	}
 	// Assign url value
 	ws.url = &url

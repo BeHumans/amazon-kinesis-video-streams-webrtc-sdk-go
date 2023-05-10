@@ -2,7 +2,7 @@ package signaling
 
 import "github.com/pion/randutil"
 
-// Util to generate random string with n chars
+// RandSeq Util to generate random string with n chars
 func RandSeq(n int) string {
 	val, err := randutil.GenerateCryptoRandomString(n, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 	if err != nil {
