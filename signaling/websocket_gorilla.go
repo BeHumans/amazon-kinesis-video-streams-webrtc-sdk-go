@@ -91,7 +91,7 @@ func (ws *WebSocketClient) Send(msgType int, data []byte) error {
 	return nil
 }
 
-// Function to close websocket gratefully
+// Close Function do websocket close gratefully
 func (ws *WebSocketClient) Close() {
 	// Check if it calls when is closed
 	if ws.isClosed {

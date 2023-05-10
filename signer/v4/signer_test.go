@@ -15,7 +15,7 @@ var region string
 var date time.Time
 var queryParams map[string]string
 var credetialsValue credentials.Value
-var testSigner signer.SignerAPI
+var testSigner signer.APII
 var service string
 
 // Expected Signed URLs

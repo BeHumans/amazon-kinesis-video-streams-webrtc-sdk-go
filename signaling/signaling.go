@@ -27,7 +27,7 @@ type WebSocketSignalingMessageReceive struct {
 }
 
 // Default service for v4 signature
-var service string = "kinesisvideo"
+var service = "kinesisvideo"
 
 // Signaling configure
 type Config struct {
@@ -60,10 +60,10 @@ const (
 )
 
 // Signaling client
-type SignalingClient struct {
+type Client struct {
 	readyState                     ReadyStateType                               // Signaling cient connection status
 	config                         Config                                       // Signaling client configuration
-	signer                         signer.SignerAPI                             // V4 AWS Signer
+	signer                         signer.APII                                  // V4 AWS Signer
 	dateProvider                   *signer.DateProvier                          // Date provider for V4 AWS Signer
 	wsClient                       WebSocketClientI                             // Websocket client
 	onOpen                         func()                                       // Function for Open Event
@@ -77,22 +77,22 @@ type SignalingClient struct {
 }
 
 // On Open Event Function
-func (sc *SignalingClient) OnOpen(f func()) {
+func (sc *Client) OnOpen(f func()) {
 	sc.onOpen = f
 }
 
 // On Close Event Function
-func (sc *SignalingClient) OnClose(f func()) {
+func (sc *Client) OnClose(f func()) {
 	sc.onClose = f
 }
 
 // OnError Event Function
-func (sc *SignalingClient) OnError(f func(err error)) {
+func (sc *Client) OnError(f func(err error)) {
 	sc.onError = f
 }
 
 // OnMessage Event Function
-func (sc *SignalingClient) onMessage(data []byte) {
+func (sc *Client) onMessage(data []byte) {
 
 	var messageParsed WebSocketSignalingMessageReceive
 
@@ -139,45 +139,45 @@ func (sc *SignalingClient) onMessage(data []byte) {
 }
 
 // On Sdp Answer Event Function
-func (sc *SignalingClient) OnSdpAnswer(f func(answer *string, clientID *string)) {
+func (sc *Client) OnSdpAnswer(f func(answer *string, clientID *string)) {
 	sc.onSdpAnswer = f
 }
 
 // On Sdp Offer Event Function
-func (sc *SignalingClient) OnSdpOffer(f func(offer *string, remoteClientID *string)) {
+func (sc *Client) OnSdpOffer(f func(offer *string, remoteClientID *string)) {
 	sc.onSdpOffer = f
 }
 
 // On ICE Candidate Event Function
-func (sc *SignalingClient) OnIceCandidate(f func(iceCandidate *string, clientID *string)) {
+func (sc *Client) OnIceCandidate(f func(iceCandidate *string, clientID *string)) {
 	sc.onIceCandidate = f
 }
 
 // Optional parameters
 
 // Use own websocket client implementation
-func WithWebsocketClient(websocket WebSocketClientI) func(*SignalingClient) {
-	return func(sc *SignalingClient) {
+func WithWebsocketClient(websocket WebSocketClientI) func(*Client) {
+	return func(sc *Client) {
 		sc.wsClient = websocket
 	}
 }
 
 // Use own v4 AWS signer implementation
-func WithSigner(signer signer.SignerAPI) func(*SignalingClient) {
-	return func(sc *SignalingClient) {
+func WithSigner(signer signer.APII) func(*Client) {
+	return func(sc *Client) {
 		sc.signer = signer
 	}
 }
 
 // Use own Date Provider implementation
-func WithDateProvider(dateProvider signer.DateProvier) func(*SignalingClient) {
-	return func(sc *SignalingClient) {
+func WithDateProvider(dateProvider signer.DateProvier) func(*Client) {
+	return func(sc *Client) {
 		sc.dateProvider = &dateProvider
 	}
 }
 
 // New signaling client
-func New(config *Config, options ...func(*SignalingClient)) (*SignalingClient, error) {
+func New(config *Config, options ...func(*Client)) (*Client, error) {
 
 	// Config must never be nil
 	if config == nil {
@@ -185,7 +185,7 @@ func New(config *Config, options ...func(*SignalingClient)) (*SignalingClient, e
 	}
 
 	// New Signaling client with initial values
-	sc := &SignalingClient{
+	sc := &Client{
 		readyState:                     closed,
 		config:                         *config,
 		hasReceivedRemoteSDPByClientID: make(map[string]bool),
@@ -232,7 +232,7 @@ func New(config *Config, options ...func(*SignalingClient)) (*SignalingClient, e
 
 	// If you are not using our signer
 	if sc.signer == nil {
-		var kinesisVideoSigner signer.SignerAPI
+		var kinesisVideoSigner signer.APII
 		var err error
 		// Do you have own Credentials ?
 		if config.CredentialsValue != nil {
@@ -271,7 +271,7 @@ func New(config *Config, options ...func(*SignalingClient)) (*SignalingClient, e
 }
 
 // Open Signaling Client
-func (sc *SignalingClient) Open() error {
+func (sc *Client) Open() error {
 	// Check if reOpen action
 	if sc.readyState != closed {
 		err := errors.New("client is already open, opening, or closing")
@@ -363,7 +363,7 @@ func (sc *SignalingClient) Open() error {
 }
 
 // Close signaling client
-func (sc *SignalingClient) Close() {
+func (sc *Client) Close() {
 	// If websocket exists
 	if sc.wsClient != nil {
 		// Change signaling client status
@@ -379,7 +379,7 @@ func (sc *SignalingClient) Close() {
 }
 
 // Use for emit Ice Candidate Messages when signaling client has recive SDP message
-func (sc *SignalingClient) emitOrQueueIceCandidate(iceCandidate *string, clientID *string) {
+func (sc *Client) emitOrQueueIceCandidate(iceCandidate *string, clientID *string) {
 	var clientIDKEY string
 
 	// if you don't have client Id use Default Client Id
@@ -405,7 +405,7 @@ func (sc *SignalingClient) emitOrQueueIceCandidate(iceCandidate *string, clientI
 }
 
 // Use for emit Ice Candidate Messages
-func (sc *SignalingClient) emitPendingIceCandidates(clientID *string) {
+func (sc *Client) emitPendingIceCandidates(clientID *string) {
 	var clientIDKEY string
 
 	// if you don't have client Id use Default Client Id
@@ -437,7 +437,7 @@ func (sc *SignalingClient) emitPendingIceCandidates(clientID *string) {
 }
 
 // Sender signalingSdp Offer Messages
-func (sc *SignalingClient) SendSdpOffer(sdpOfferMsg string, recipientClientID *string) {
+func (sc *Client) SendSdpOffer(sdpOfferMsg string, recipientClientID *string) {
 	var clientID string
 
 	// Assing client Id if exists
@@ -449,7 +449,7 @@ func (sc *SignalingClient) SendSdpOffer(sdpOfferMsg string, recipientClientID *s
 }
 
 // Sender signaling Ice Candidate Messages
-func (sc *SignalingClient) SendIceCandidate(iceCandidateMsg string, recipientClientID *string) {
+func (sc *Client) SendIceCandidate(iceCandidateMsg string, recipientClientID *string) {
 	var clientID string
 
 	// Assing client Id if exists
@@ -461,7 +461,7 @@ func (sc *SignalingClient) SendIceCandidate(iceCandidateMsg string, recipientCli
 }
 
 // Sender signaling Sdp Answer Messages
-func (sc *SignalingClient) SendSdpAnswer(sdpAnswerMsg string, recipientClientID *string) {
+func (sc *Client) SendSdpAnswer(sdpAnswerMsg string, recipientClientID *string) {
 	var clientID string
 
 	// Assing client Id if exists
@@ -473,7 +473,7 @@ func (sc *SignalingClient) SendSdpAnswer(sdpAnswerMsg string, recipientClientID 
 }
 
 // Generic Sender signaling Messages
-func (sc *SignalingClient) sendMessage(msgType MessageType, payload string, recipientClientID string) {
+func (sc *Client) sendMessage(msgType MessageType, payload string, recipientClientID string) {
 
 	// If signaling client status is different to OPEN, you can't send message
 	if sc.readyState != open {
@@ -504,7 +504,7 @@ func (sc *SignalingClient) sendMessage(msgType MessageType, payload string, reci
 }
 
 // Error if Recipient Client Id exists and actor is viewer
-func (sc *SignalingClient) validateRecipientClientID(recipientClientID *string) bool {
+func (sc *Client) validateRecipientClientID(recipientClientID *string) bool {
 	if sc.config.Role == Viewer && recipientClientID != nil && *recipientClientID != "" {
 		err := errors.New("unexpected recipient client id. As the VIEWER, messages must not be sent with a recipient client id")
 		sc.onError(err)

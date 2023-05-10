@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	// Default Algorithm used for AWS V4 Signed
+	// DefaultAlgorithm used for AWS V4 Signed
 	DefaultAlgorithm = "AWS4-HMAC-SHA256"
 )
 
@@ -26,10 +26,10 @@ type Signer struct {
 // Get Signature from datestring, region and service using credentials
 func (s *Signer) getSignatureKey(dateString string) []byte {
 	cred, _ := s.Credentials.Get()
-	kDate := signer.HMAC([]byte("AWS4"+cred.SecretAccessKey), dateString)
-	kRegion := signer.HMAC(kDate, s.Region)
-	kService := signer.HMAC(kRegion, s.Service)
-	return signer.HMAC(kService, "aws4_request")
+	date := signer.HMAC([]byte("AWS4"+cred.SecretAccessKey), dateString)
+	region := signer.HMAC(date, s.Region)
+	service := signer.HMAC(region, s.Service)
+	return signer.HMAC(service, "aws4_request")
 }
 
 // Add credentials value as option
@@ -86,7 +86,7 @@ func New(options ...func(*Signer)) (*Signer, error) {
 	return rs, nil
 }
 
-// function that sign input url, input query params and input date
+// GetSignedURL function that sign input url, input query params and input date
 func (s *Signer) GetSignedURL(endpoint string, queryParams signer.QueryParams, date *time.Time) (string, error) {
 	// Get credentials to use
 	cred, err := s.Credentials.Get()
