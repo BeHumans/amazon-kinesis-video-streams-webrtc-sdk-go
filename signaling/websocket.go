@@ -9,7 +9,7 @@ type WebSocketClientI interface {
 	Close()
 	OnMessage(chan string, func(messageType int, data []byte))
 	Send(int, []byte) error
-	SetUrl(string) error
+	SetURL(string) error
 }
 
 // For using webosocket text msg

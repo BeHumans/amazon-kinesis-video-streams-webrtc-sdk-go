@@ -5,7 +5,7 @@ type Role string
 
 // Signaling connection types
 const (
-	MASTER            Role = "MASTER"
-	VIEWER            Role = "VIEWER"
-	DEFAULT_CLIENT_ID Role = "MASTER"
+	Master          Role = "MASTER"
+	Viewer          Role = "VIEWER"
+	DefaultClientID Role = "MASTER"
 )
