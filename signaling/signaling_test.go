@@ -21,23 +21,23 @@ var (
 	SDPOffer = `{"sdp":"offer= true\nvideo= true","type":"offer"}`
 
 	sdpOfferViewer        = `{"action":"SDPOffer","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoib2ZmZXIifQ=="}`
-	sdpOfferViewerMessage = `{"messageType":"SDPOffer","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoib2ZmZXIifQ==","senderClientID":"TestClientId"}`
-	sdpOfferMaster        = `{"action":"SDPOffer","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoib2ZmZXIifQ==","recipientClientID":"TestClientId"}`
+	sdpOfferViewerMessage = `{"messageType":"SDPOffer","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoib2ZmZXIifQ==","senderClientId":"TestClientId"}`
+	sdpOfferMaster        = `{"action":"SDPOffer","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoib2ZmZXIifQ==","recipientClientId":"TestClientId"}`
 	sdpOfferMasterMessage = `{"messageType":"SDPOffer","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoib2ZmZXIifQ=="}`
 
 	SDPAnswer = `{"sdp":"offer= true\nvideo= true","type":"answer"}`
 
-	sdpAnswerViewerMessage = `{"messageType":"SDPAnswer","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoiYW5zd2VyIn0=","senderClientID":"TestClientId"}'`
+	sdpAnswerViewerMessage = `{"messageType":"SDPAnswer","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoiYW5zd2VyIn0=","senderClientId":"TestClientId"}'`
 	sdpAnswerViewer        = `{"action":"SDPAnswer","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoiYW5zd2VyIn0="}`
 	sdpAnswerMasterMessage = `{"messageType":"SDPAnswer","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoiYW5zd2VyIn0="}'`
-	sdpAnswerMaster        = `{"action":"SDPAnswer","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoiYW5zd2VyIn0=","recipientClientID":"TestClientId"}`
+	sdpAnswerMaster        = `{"action":"SDPAnswer","messagePayload":"eyJzZHAiOiJvZmZlcj0gdHJ1ZVxudmlkZW89IHRydWUiLCJ0eXBlIjoiYW5zd2VyIn0=","recipientClientId":"TestClientId"}`
 
 	ICECandidate = `{"candidate":"upd 10.111.34.88","sdpMid":"1","sdpMLineIndex":1}`
 
 	iceCandidateViewer        = `{"action":"ICECandidate","messagePayload":"eyJjYW5kaWRhdGUiOiJ1cGQgMTAuMTExLjM0Ljg4Iiwic2RwTWlkIjoiMSIsInNkcE1MaW5lSW5kZXgiOjF9"}`
-	iceCandidateViewerMessage = `{"messageType":"ICECandidate","messagePayload":"eyJjYW5kaWRhdGUiOiJ1cGQgMTAuMTExLjM0Ljg4Iiwic2RwTWlkIjoiMSIsInNkcE1MaW5lSW5kZXgiOjF9","senderClientID":"TestClientId"}`
+	iceCandidateViewerMessage = `{"messageType":"ICECandidate","messagePayload":"eyJjYW5kaWRhdGUiOiJ1cGQgMTAuMTExLjM0Ljg4Iiwic2RwTWlkIjoiMSIsInNkcE1MaW5lSW5kZXgiOjF9","senderClientId":"TestClientId"}`
 	iceCandidateMasterMessage = `{"messageType":"ICECandidate","messagePayload":"eyJjYW5kaWRhdGUiOiJ1cGQgMTAuMTExLjM0Ljg4Iiwic2RwTWlkIjoiMSIsInNkcE1MaW5lSW5kZXgiOjF9"}`
-	iceCandidateMaster        = `{"action":"ICECandidate","messagePayload":"eyJjYW5kaWRhdGUiOiJ1cGQgMTAuMTExLjM0Ljg4Iiwic2RwTWlkIjoiMSIsInNkcE1MaW5lSW5kZXgiOjF9","recipientClientID":"TestClientId"}`
+	iceCandidateMaster        = `{"action":"ICECandidate","messagePayload":"eyJjYW5kaWRhdGUiOiJ1cGQgMTAuMTExLjM0Ljg4Iiwic2RwTWlkIjoiMSIsInNkcE1MaW5lSW5kZXgiOjF9","recipientClientId":"TestClientId"}`
 )
 
 // Testing signaling configures
