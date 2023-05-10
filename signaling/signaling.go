@@ -44,9 +44,9 @@ type Config struct {
 type MessageType string
 
 const (
-	sdpAnswer    MessageType = "SDPAnswer"
-	sdpOffer     MessageType = "SDPOffer"
-	iceCandidate MessageType = "ICECandidate"
+	sdpAnswer    MessageType = "SDP_ANSWER"
+	sdpOffer     MessageType = "SDP_OFFER"
+	iceCandidate MessageType = "ICE_CANDIDATE"
 )
 
 // Signaling connection State Type
