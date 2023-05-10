@@ -16,14 +16,14 @@ import (
 type WebSocketSignalingMessageSend struct {
 	MessageType       MessageType `json:"action,omitempty"`
 	MessagePayload    string      `json:"messagePayload,omitempty"`
-	RecipientClientID string      `json:"recipientClientID,omitempty"`
+	RecipientClientID string      `json:"recipientClientId,omitempty"`
 }
 
 // Signaling msg format for Reception
 type WebSocketSignalingMessageReceive struct {
 	MessageType    MessageType `json:"messageType,omitempty"`
 	MessagePayload string      `json:"messagePayload,omitempty"`
-	SenderClientID string      `json:"senderClientID,omitempty"`
+	SenderClientID string      `json:"senderClientId,omitempty"`
 }
 
 // Default service for v4 signature
