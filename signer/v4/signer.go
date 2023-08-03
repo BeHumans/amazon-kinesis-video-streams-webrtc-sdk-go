@@ -9,6 +9,7 @@ import (
 
 	"github.com/BeHumans/amazon-kinesis-video-streams-webrtc-sdk-go/signer"
 	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
 )
 
 const (
@@ -75,10 +76,12 @@ func New(options ...func(*Signer)) (*Signer, error) {
 		// Create Chain in order
 		// 1.Env Provider
 		// 2.Shared Credentials Provider
+		// 3.ECS task definition or RunTask API operation
 		rs.Credentials = credentials.NewChainCredentials(
 			[]credentials.Provider{
 				&credentials.EnvProvider{},
 				&credentials.SharedCredentialsProvider{},
+				&ec2rolecreds.EC2RoleProvider{},
 			})
 	}
 
